@@ -8,7 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Booking extends Model
 {
     use HasFactory;
-    protected $fillable = ['date', 'time', 'pet_name', 'user_id'];
+    protected $fillable = [
+        'date', 
+        'time', 
+        'pet_name', 
+        'breed', 
+        'age', 
+        'color', 
+        'symptoms', 
+        'user_id',
+        'user_email',
+    ];
+
     // Define the relationship with the User model
     public function user()
     {
