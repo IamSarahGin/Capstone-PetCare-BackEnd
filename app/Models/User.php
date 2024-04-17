@@ -22,7 +22,11 @@ class User extends Authenticatable
         'email',
         'password',
     ];
-
+    // Inside your User model
+    public function timeSlots()
+    {
+        return $this->hasMany(TimeSlot::class);
+    }
     /**
      * The attributes that should be hidden for serialization.
      *
