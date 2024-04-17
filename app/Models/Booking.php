@@ -18,6 +18,8 @@ class Booking extends Model
         'symptoms', 
         'user_id',
         'user_email',
+        'status'
+
     ];
 
     // Define the relationship with the User model

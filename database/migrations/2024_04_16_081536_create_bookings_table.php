@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('symptoms'); // Added symptoms field
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('user_email'); // Added user_email field
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
         });
     }

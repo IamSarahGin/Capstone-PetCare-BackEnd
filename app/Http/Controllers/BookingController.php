@@ -23,6 +23,7 @@ class BookingController extends Controller
             'age' => 'required|integer',
             'color' => 'required',
             'symptoms' => 'required',
+            'status' => 'required|in:pending,approved,rejected', 
         ]);
 
         if ($validator->fails()) {
@@ -39,6 +40,7 @@ class BookingController extends Controller
             'age' => $request->age,
             'color' => $request->color,
             'symptoms' => $request->symptoms,
+            'status' => $request->status,
         ]);
 
         $booking->save();
