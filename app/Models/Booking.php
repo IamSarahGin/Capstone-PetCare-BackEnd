@@ -18,7 +18,9 @@ class Booking extends Model
         'symptoms', 
         'user_id',
         'user_email',
-        'status'
+        'status',
+        'pet_id', 
+        'pet_type', 
 
     ];
 

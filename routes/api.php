@@ -7,6 +7,8 @@ use App\Http\Controllers\ForgotController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\PetController;
+use App\Http\Controllers\TimeSlotController;
 /*
 |--------------------------------------------------------------------------
 | Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -25,6 +27,7 @@ Route::post('/resetpassword',[ResetController::class,'ResetPassword']);
 //get user route
 //use middleware to check if the user is logged
 Route::get('/user',[UserController::class,'User'])->middleware('auth:api');
+
 //booking
 Route::middleware('auth:api')->group(function () {
     Route::get('/bookings', [BookingController::class, 'index']);
@@ -33,3 +36,11 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/bookings/{id}', [BookingController::class, 'update']);
     Route::delete('/bookings/{id}', [BookingController::class, 'destroy']);
 });
+
+// CRUD operations on pets
+Route::get('/pets', [PetController::class, 'index']); // Retrieve all pets
+Route::post('/pets', [PetController::class, 'store']); // Create a new pet
+Route::get('/pets/{id}', [PetController::class, 'show']); // Retrieve a specific pet
+Route::put('/pets/{id}', [PetController::class, 'update']); // Update a pet
+Route::delete('/pets/{id}', [PetController::class, 'destroy']); // Delete a pet
+

@@ -24,6 +24,8 @@ class BookingController extends Controller
             'color' => 'required',
             'symptoms' => 'required',
             'status' => 'required|in:pending,approved,rejected', 
+            'pet_id' => 'required|exists:pets,id',
+            'pet_type'=>'required'
         ]);
 
         if ($validator->fails()) {
@@ -41,6 +43,8 @@ class BookingController extends Controller
             'color' => $request->color,
             'symptoms' => $request->symptoms,
             'status' => $request->status,
+            'pet_id' => $request->pet_id,
+            'pet_type'=>$request->pet_type,
         ]);
 
         $booking->save();

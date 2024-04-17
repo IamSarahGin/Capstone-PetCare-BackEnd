@@ -16,13 +16,15 @@ return new class extends Migration
             $table->date('date');
             $table->time('time');
             $table->string('pet_name');
-            $table->string('breed'); // Added breed field
-            $table->integer('age'); // Added age field
-            $table->string('color'); // Added color field
-            $table->text('symptoms'); // Added symptoms field
+            $table->string('breed');
+            $table->integer('age');
+            $table->string('color');
+            $table->text('symptoms');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('user_email'); // Added user_email field
+            $table->string('user_email');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->foreignId('pet_id')->constrained('pets')->onDelete('cascade');
+            $table->string('pet_type')->nullable();
             $table->timestamps();
         });
     }
