@@ -17,8 +17,8 @@ return new class extends Migration
             $table->time('startTime');
             $table->time('endTime');
             $table->enum('availability', ['available', 'booked'])->default('available');
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->string('user_email')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable()->after('availability');
+            $table->string('user_email')->nullable()->after('user_id');
             
         });
     }
