@@ -9,6 +9,7 @@ use App\Http\Controllers\ResetController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\TimeSlotController;
+use App\Http\Controllers\ContactController;
 /*
 |--------------------------------------------------------------------------
 | Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -44,10 +45,13 @@ Route::get('/pets/{id}', [PetController::class, 'show']); // Retrieve a specific
 Route::put('/pets/{id}', [PetController::class, 'update']); // Update a pet
 Route::delete('/pets/{id}', [PetController::class, 'destroy']); // Delete a pet
 
-
+//TimeSlot
 Route::middleware('auth:api')->group(function () {
     Route::get('/time-slots', [TimeSlotController::class, 'index']);
 Route::post('/time-slots', [TimeSlotController::class, 'store']);
 Route::put('/time-slots/{id}', [TimeSlotController::class, 'update']);
 Route::delete('/time-slots/{id}', [TimeSlotController::class, 'destroy']);
 });
+
+//send Contact to mailtrap
+Route::post('/contact', [ContactController::class, 'sendEmail']);
