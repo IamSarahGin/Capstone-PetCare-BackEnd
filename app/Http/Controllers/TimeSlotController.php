@@ -7,67 +7,66 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TimeSlotController extends Controller
+{public function index(Request $request)
 {
-    public function index(Request $request)
-    {
+    try {
         $selectedDate = $request->input('date', date('Y-m-d'));
 
-        $timeSlots = TimeSlot::whereDate('date', $selectedDate)
+        $timeSlots = TimeSlot::select('start_time', 'end_time')
+                             ->whereDate('date', $selectedDate)
                              ->where('availability', 'available')
+                             ->distinct()
                              ->get();
 
         return response()->json($timeSlots);
+    } catch (\Exception $e) {
+        // Handle any exceptions and return a meaningful error message
+        return response()->json(['message' => 'Error fetching time slots'], 500);
+    }
+}
+public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'date' => 'required|date|after_or_equal:today',
+            'start_time' => 'required|date_format:H:i:s',
+            'end_time' => 'required|date_format:H:i:s|after:start_time',
+            'availability' => 'required|in:available,booked',
+        ]);
+
+        $timeSlot = TimeSlot::create([
+            'date' => $validatedData['date'],
+            'start_time' => $validatedData['start_time'],
+            'end_time' => $validatedData['end_time'],
+            'availability' => $validatedData['availability'],
+            'user_id' => auth()->id(),
+            'user_email' => Auth::user()->email,
+        ]);
+
+        return response()->json($timeSlot, 201);
     }
 
-    public function store(Request $request)
-{
-    // Validate the request
-    $validatedData = $request->validate([
-        'date' => 'required|date|after_or_equal:today',
-        'startTime' => 'required|date_format:H:i:s',
-        'endTime' => 'required|date_format:H:i:s|after:startTime',
-        'availability' => 'required|in:available,booked',
-    ]);
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'date' => 'required|date',
+            'start_time' => 'required|date_format:H:i:s',
+            'end_time' => 'required|date_format:H:i:s|after:start_time',
+            'availability' => 'required|in:available,booked',
+        ]);
 
-    // Create the time slot
-    $timeSlot = TimeSlot::create([
-        'date' => $validatedData['date'],
-        'startTime' => $validatedData['startTime'],
-        'endTime' => $validatedData['endTime'],
-        'availability' => $validatedData['availability'],
-        'user_id' => auth()->id(), // Associate the authenticated user's ID with the time slot
-        'user_email' => Auth::user()->email, // Store the user's email
-    ]);
+        $timeSlot = TimeSlot::findOrFail($id);
 
-    return response()->json($timeSlot, 201);
-}
+        $timeSlot->update([
+            'date' => $validatedData['date'],
+            'start_time' => $validatedData['start_time'],
+            'end_time' => $validatedData['end_time'],
+            'availability' => $validatedData['availability'],
+            'user_id' => auth()->id(), 
+            'user_email' => Auth::user()->email,
+        ]);
 
-public function update(Request $request, $id)
-{
-    // Validate the request
-    $validatedData = $request->validate([
-        'date' => 'required|date',
-        'startTime' => 'required|date_format:H:i:s',
-        'endTime' => 'required|date_format:H:i:s|after:startTime',
-        'availability' => 'required|in:available,booked',
-    ]);
-
-    // Find the time slot
-    $timeSlot = TimeSlot::findOrFail($id);
-
-    // Update the time slot
-    $timeSlot->update([
-        'date' => $validatedData['date'],
-        'startTime' => $validatedData['startTime'],
-        'endTime' => $validatedData['endTime'],
-        'availability' => $validatedData['availability'],
-        'user_id' => auth()->id(), // Associate the authenticated user's ID with the time slot
-        'user_email' => Auth::user()->email, // Store the user's email
-    ]);
-
-    return response()->json($timeSlot, 200);
-}
-
+        return response()->json($timeSlot, 200);
+    }
 
     public function destroy($id)
     {

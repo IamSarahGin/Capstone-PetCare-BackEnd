@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->time('time');
+            $table->string('time');
             $table->string('pet_name');
             $table->string('breed');
             $table->integer('age');

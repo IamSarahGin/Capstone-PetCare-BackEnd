@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('time_slots', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->time('startTime');
-            $table->time('endTime');
+            $table->time('start_time');
+            $table->time('end_time');
             $table->enum('availability', ['available', 'booked'])->default('available');
-            $table->unsignedBigInteger('user_id')->nullable()->after('availability');
-            $table->string('user_email')->nullable()->after('user_id');
-            
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('user_email')->nullable();
+            $table->timestamps(); // Adds created_at and updated_at columns
         });
     }
 
