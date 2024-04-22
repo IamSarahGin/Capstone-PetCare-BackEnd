@@ -65,11 +65,13 @@ class AdminAuthController extends Controller
         return view('profile');
     }
 //to get all the pending bookings
-    public function showBookings()
+public function showBookings()
 {
-    $pendingBookings = Booking::where('status', 'pending')->get();
+    $pendingBookings = Booking::where('status', 'pending')->paginate(10); // Change '10' to the desired number of items per page
     return view('admin.bookings', compact('pendingBookings'));
 }
+
+
 //to update the update bookings status
 public function updateBookingStatus(Request $request, $id)
 {
@@ -80,16 +82,19 @@ public function updateBookingStatus(Request $request, $id)
     return redirect()->back()->with('success', 'Booking status updated successfully');
 }
 //to get all the approved booking
+//to get all the approved booking
 public function showApprovedBookings()
 {
-    $approvedBookings = Booking::where('status', 'approved')->get();
+    $approvedBookings = Booking::where('status', 'approved')->paginate(10); // Change '10' to the desired number of items per page
     return view('admin.approved_bookings', compact('approvedBookings'));
 }
+
 //to get all the rejected booking
 public function showRejectedBookings()
 {
-    $rejectedBookings = Booking::where('status', 'rejected')->get();
+    $rejectedBookings = Booking::where('status', 'rejected')->paginate(10); // Change '10' to the desired number of items per page
     return view('admin.rejected_bookings', compact('rejectedBookings'));
 }
+
 
 }

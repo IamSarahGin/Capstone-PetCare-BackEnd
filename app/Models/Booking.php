@@ -21,6 +21,7 @@ class Booking extends Model
         'status',
         'pet_id', 
         'pet_type', 
+        "service_type",
 
     ];
 

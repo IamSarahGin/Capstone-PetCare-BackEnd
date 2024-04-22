@@ -25,6 +25,7 @@ return new class extends Migration
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->foreignId('pet_id')->constrained('pets')->onDelete('cascade');
             $table->string('pet_type')->nullable();
+            $table->string('service_type')->nullable();
             $table->timestamps();
         });
     }

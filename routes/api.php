@@ -10,6 +10,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\PetController;
 use App\Http\Controllers\TimeSlotController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ServiceController;
 /*
 |--------------------------------------------------------------------------
 | Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -55,3 +56,6 @@ Route::delete('/time-slots/{id}', [TimeSlotController::class, 'destroy']);
 
 //send Contact to mailtrap
 Route::post('/contact', [ContactController::class, 'sendEmail']);
+
+//services
+Route::get('/services', [ServiceController::class, 'index']);
