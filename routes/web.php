@@ -23,8 +23,9 @@ Route::controller(AdminAuthController::class)->group(function (){
 
     Route::get('login', [AdminAuthController::class, 'login'])->name('login');
     Route::post('login', [AdminAuthController::class, 'loginAction'])->name('login.action');
+    Route::post('logout',[AdminAuthController::class, 'logout'])->name('logout');
 
-    Route::get('logout',[AdminAuthController::class, 'logout'])->middleware('auth')->name('logout');
+    
 
 });
 

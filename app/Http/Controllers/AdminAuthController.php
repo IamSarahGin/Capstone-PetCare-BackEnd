@@ -10,39 +10,64 @@ use Illuminate\Validation\ValidationException;
 use App\Models\AdminUser;
 use App\Models\Booking;
 use App\Models\Service;
+use Illuminate\Support\Str;
+
+
 class AdminAuthController extends Controller
 {
     public function register()
     {
         return view('auth.register');
     }
-    
     public function registerSave(Request $request)
-    {
-        Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|confirmed'
-        ])->validate();
+{
+    Validator::make($request->all(), [
+        'name' => 'required',
+        'email' => 'required|email|unique:admin_users,email', // Ensure unique email addresses
+        'password' => 'required|confirmed'
+    ])->validate();
 
-        AdminUser::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'level' => 'Admin'
-        ]);
+    $user = AdminUser::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'level' => 'Admin'
+    ]);
 
-        return redirect()->route('login')->with('success', 'Registration successful. Please log in.');
+    // Generate and save remember token
+    $rememberToken = Str::random(60);
+    $user->forceFill(['remember_token' => hash('sha256', $rememberToken)])->save();
+
+    // Store remember token in localStorage
+    session(['remember_token' => $rememberToken]);
+
+    return redirect()->route('login')->with('success', 'Registration successful. Please log in.');
+}
+
+
+
+
+public function login()
+{
+    if (Auth::guard('admin_users')->check()) {
+        return redirect()->route('dashboard'); // Redirect if already authenticated
     }
+    return view('auth.login');
+}
 
-    public function login()
-    {
-        return view('auth.login');
-    }
-    public function loginAction(Request $request)
+public function loginAction(Request $request)
 {
     $credentials = $request->only('email', 'password');
     $remember = $request->has('remember');
+
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    if ($validator->fails()) {
+        return redirect()->route('login')->withErrors($validator)->withInput();
+    }
 
     if (Auth::guard('admin_users')->attempt($credentials, $remember)) {
         $request->session()->regenerate();
@@ -53,12 +78,26 @@ class AdminAuthController extends Controller
 }
 
 
-    public function logout(Request $request)
-    {
-        Auth::guard('admin_users')->logout();
-        $request->session()->invalidate();
-        return redirect('/');
+
+public function logout(Request $request)
+{
+    // Clear authentication state
+    Auth::guard('admin_users')->logout();
+
+    // Remove remember token from database
+    $user = $request->user('admin_users');
+    if ($user) {
+        $user->forceFill(['remember_token' => null])->save();
     }
+
+    // Remove remember token from localStorage
+    $request->session()->forget('remember_token');
+
+    // Redirect to login page
+    return redirect()->route('login');
+}
+
+
 
     //profile
     public function profile()
