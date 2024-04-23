@@ -60,3 +60,11 @@ Route::put('/admin/services/update/{id}', [AdminAuthController::class, 'updateSe
     Route::post('/admin/services/restore/{id}', [AdminAuthController::class, 'restoreService'])->name('admin.services.restore'); // Define restore route here
     Route::delete('/admin/services/delete-permanently/{id}', [AdminAuthController::class, 'deletePermanentlyService'])->name('admin.services.delete-permanently'); // Define permanent delete route
 });
+
+Route::middleware('auth:admin_users')->group(function (){
+    Route::get('dashboard', function(){
+        $adminAuthController = new AdminAuthController();
+        $bookingCounts = $adminAuthController->getBookingCounts();
+        return view('dashboard', compact('bookingCounts'));
+    })->name('dashboard');
+});

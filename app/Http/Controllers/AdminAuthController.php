@@ -200,6 +200,17 @@ public function restoreService($id)
     $service->restore();
     return redirect()->route('admin.services')->with('success', 'Service restored successfully.');
 }
+public function getBookingCounts()
+{
+    $pendingCount = Booking::where('status', 'pending')->count();
+    $approvedCount = Booking::where('status', 'approved')->count();
+    $rejectedCount = Booking::where('status', 'rejected')->count();
 
+    return [
+        'pendingCount' => $pendingCount,
+        'approvedCount' => $approvedCount,
+        'rejectedCount' => $rejectedCount,
+    ];
+}
 
 }

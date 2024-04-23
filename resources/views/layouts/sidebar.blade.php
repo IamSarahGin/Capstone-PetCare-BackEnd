@@ -2,11 +2,11 @@
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                <div class="sidebar-brand-icon rotate-n-15">
-                <img src="{{ asset('petcareLogo.ico') }}" class="img-fluid" alt="Logo">
-                </div>
-                <div class="sidebar-brand-text mx-3">PetCare Admin</div>
-            </a>
+    <div>
+        <img src="{{ asset('petcareLogo.ico') }}" class="img-fluid" alt="Logo" width="60">
+    </div>
+    <div class="sidebar-brand-text mx-3" >PetCare Admin</div>
+</a>
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
