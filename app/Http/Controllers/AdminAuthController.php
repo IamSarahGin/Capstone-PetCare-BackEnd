@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Pagination\Paginator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use App\Models\AdminUser;
 use App\Models\Booking;
+use App\Models\Service;
 class AdminAuthController extends Controller
 {
     public function register()
@@ -94,6 +95,71 @@ public function showRejectedBookings()
 {
     $rejectedBookings = Booking::where('status', 'rejected')->paginate(10); // Change '10' to the desired number of items per page
     return view('admin.rejected_bookings', compact('rejectedBookings'));
+}
+
+public function showServices()
+{
+    $services = Service::paginate(10); // Paginate the active services
+    $softDeletedServices = Service::onlyTrashed()->paginate(10); // Paginate the soft deleted services
+    return view('admin.services', compact('services', 'softDeletedServices'));
+}
+
+
+
+    public function storeService(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'service_type' => 'required|unique:services',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        Service::create([
+            'service_type' => $request->service_type,
+        ]);
+
+        return redirect()->route('admin.services')->with('success', 'Service created successfully.');
+    }
+    public function editService($id)
+{
+    $editService = Service::findOrFail($id);
+    return view('admin.edit_service', compact('editService'));
+}
+
+
+public function updateService(Request $request, $id)
+{
+    $validator = Validator::make($request->all(), [
+        'service_type' => 'required|unique:services,service_type,' . $id,
+    ]);
+
+    if ($validator->fails()) {
+        return redirect()->back()->withErrors($validator)->withInput();
+    }
+
+    $service = Service::findOrFail($id);
+    $service->update([
+        'service_type' => $request->service_type,
+    ]);
+
+    return redirect()->route('admin.services')->with('success', 'Service updated successfully.');
+}
+
+
+public function softDeleteService($id)
+{
+    $service = Service::findOrFail($id);
+    $service->delete();
+    return redirect()->route('admin.services')->with('success', 'Service soft deleted successfully.');
+}
+
+public function restoreService($id)
+{
+    $service = Service::withTrashed()->findOrFail($id);
+    $service->restore();
+    return redirect()->route('admin.services')->with('success', 'Service restored successfully.');
 }
 
 

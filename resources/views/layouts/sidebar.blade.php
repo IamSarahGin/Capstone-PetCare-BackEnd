@@ -19,23 +19,31 @@
             </li>
             <li class="nav-item ">
                 <a class="nav-link" href="{{ route('admin.bookings') }}">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                <i class="fas fa-fw fa-cog"></i>
                     <span>Pending Booking</span></a>
             </li>
             <li class="nav-item ">
             <a class="nav-link" href="{{ route('admin.bookings.approved') }}">
-                <i class="fas fa-fw fa-tachometer-alt"></i>
+            <i class="fas fa-fw fa-cog"></i>
                 <span>Approved Bookings</span>
             </a>
             </li>
             <li class="nav-item ">
             <a class="nav-link" href="{{ route('admin.bookings.rejected') }}">
-                <i class="fas fa-fw fa-tachometer-alt"></i>
+            <i class="fas fa-fw fa-cog"></i>
                 <span>Rejected Bookings</span>
             </a>
             </li>
 
-           
+          <!-- Nav Item - Services -->
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.services') }}">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Service Management</span>
+                </a>
+            </li>
+
+
           
 
            

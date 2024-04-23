@@ -43,3 +43,19 @@ Route::middleware('auth:admin_users')->group(function (){
     Route::get('/admin/bookings/rejected', [AdminAuthController::class, 'showRejectedBookings'])->name('admin.bookings.rejected');
 
 });
+Route::middleware('auth:admin_users')->group(function () {
+    // Other admin routes...
+
+     // Service management routes
+     Route::get('/admin/services', [AdminAuthController::class, 'showServices'])->name('admin.services');
+    Route::get('/admin/services/create', [AdminAuthController::class, 'createService'])->name('admin.services.create');
+    Route::post('/admin/services/store', [AdminAuthController::class, 'storeService'])->name('admin.services.store');
+    Route::get('/admin/services/edit/{id}', [AdminAuthController::class, 'editService'])->name('admin.services.edit');
+Route::put('/admin/services/update/{id}', [AdminAuthController::class, 'updateService'])->name('admin.services.update');
+
+
+    Route::delete('/admin/services/delete/{id}', [AdminAuthController::class, 'deleteService'])->name('admin.services.delete');
+    Route::delete('/admin/services/soft-delete/{id}', [AdminAuthController::class, 'softDeleteService'])->name('admin.services.soft-delete'); // Define soft delete route here
+    Route::post('/admin/services/restore/{id}', [AdminAuthController::class, 'restoreService'])->name('admin.services.restore'); // Define restore route here
+    Route::delete('/admin/services/delete-permanently/{id}', [AdminAuthController::class, 'deletePermanentlyService'])->name('admin.services.delete-permanently'); // Define permanent delete route
+});
