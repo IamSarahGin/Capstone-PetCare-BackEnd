@@ -10,7 +10,6 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    
                     <th>Date</th>
                     <th>Time</th>
                     <th>Pet Name</th>
