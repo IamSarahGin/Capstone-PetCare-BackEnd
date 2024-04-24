@@ -11,6 +11,7 @@ use App\Http\Controllers\PetController;
 use App\Http\Controllers\TimeSlotController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\ServicesPageController;
 /*
 |--------------------------------------------------------------------------
 | Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -59,3 +60,6 @@ Route::post('/contact', [ContactController::class, 'sendEmail']);
 
 //services
 Route::get('/services', [ServiceController::class, 'index']);
+
+//servicePage
+Route::get('/servicePage', [ServicesPageController::class, 'index']);
