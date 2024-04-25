@@ -13,6 +13,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServicesPageController;
 use App\Http\Controllers\AboutPageController;
+use App\Http\Controllers\HomePageController;
 /*
 |--------------------------------------------------------------------------
 | Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -66,5 +67,7 @@ Route::get('/services', [ServiceController::class, 'index']);
 Route::get('/servicePage', [ServicesPageController::class, 'index']);
 
 //aboutPage
-//servicePage
 Route::get('/aboutPage', [AboutPageController::class, 'index']);
+
+//homePage
+Route::get('/homePage', [HomePageController::class, 'index']);
