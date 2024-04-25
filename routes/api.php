@@ -12,6 +12,7 @@ use App\Http\Controllers\TimeSlotController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\ServicesPageController;
+use App\Http\Controllers\AboutPageController;
 /*
 |--------------------------------------------------------------------------
 | Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -49,7 +50,7 @@ Route::delete('/pets/{id}', [PetController::class, 'destroy']); // Delete a pet
 
 //TimeSlot
 Route::middleware('auth:api')->group(function () {
-    Route::get('/time-slots', [TimeSlotController::class, 'index']);
+Route::get('/time-slots', [TimeSlotController::class, 'index']);
 Route::post('/time-slots', [TimeSlotController::class, 'store']);
 Route::put('/time-slots/{id}', [TimeSlotController::class, 'update']);
 Route::delete('/time-slots/{id}', [TimeSlotController::class, 'destroy']);
@@ -63,3 +64,7 @@ Route::get('/services', [ServiceController::class, 'index']);
 
 //servicePage
 Route::get('/servicePage', [ServicesPageController::class, 'index']);
+
+//aboutPage
+//servicePage
+Route::get('/aboutPage', [AboutPageController::class, 'index']);
