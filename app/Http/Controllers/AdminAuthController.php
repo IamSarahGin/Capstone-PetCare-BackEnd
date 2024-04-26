@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Pagination\Paginator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -10,6 +11,7 @@ use Illuminate\Validation\ValidationException;
 use App\Models\AdminUser;
 use App\Models\Booking;
 use App\Models\Service;
+use App\Models\Pet;
 use Illuminate\Support\Str;
 
 
@@ -20,82 +22,82 @@ class AdminAuthController extends Controller
         return view('auth.register');
     }
     public function registerSave(Request $request)
-{
-    Validator::make($request->all(), [
-        'name' => 'required',
-        'email' => 'required|email|unique:admin_users,email', // Ensure unique email addresses
-        'password' => 'required|confirmed'
-    ])->validate();
+    {
+        Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email|unique:admin_users,email', // Ensure unique email addresses
+            'password' => 'required|confirmed'
+        ])->validate();
 
-    $user = AdminUser::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'level' => 'Admin'
-    ]);
+        $user = AdminUser::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'level' => 'Admin'
+        ]);
 
-    // Generate and save remember token
-    $rememberToken = Str::random(60);
-    $user->forceFill(['remember_token' => hash('sha256', $rememberToken)])->save();
+        // Generate and save remember token
+        $rememberToken = Str::random(60);
+        $user->forceFill(['remember_token' => hash('sha256', $rememberToken)])->save();
 
-    // Store remember token in localStorage
-    session(['remember_token' => $rememberToken]);
+        // Store remember token in localStorage
+        session(['remember_token' => $rememberToken]);
 
-    return redirect()->route('login')->with('success', 'Registration successful. Please log in.');
-}
-
-
-
-
-public function login()
-{
-    if (Auth::guard('admin_users')->check()) {
-        return redirect()->route('dashboard'); // Redirect if already authenticated
-    }
-    return view('auth.login');
-}
-
-public function loginAction(Request $request)
-{
-    $credentials = $request->only('email', 'password');
-    $remember = $request->has('remember');
-
-    $validator = Validator::make($request->all(), [
-        'email' => 'required|email',
-        'password' => 'required',
-    ]);
-
-    if ($validator->fails()) {
-        return redirect()->route('login')->withErrors($validator)->withInput();
+        return redirect()->route('login')->with('success', 'Registration successful. Please log in.');
     }
 
-    if (Auth::guard('admin_users')->attempt($credentials, $remember)) {
-        $request->session()->regenerate();
-        return redirect()->route('dashboard'); // Corrected dashboard route
+
+
+
+    public function login()
+    {
+        if (Auth::guard('admin_users')->check()) {
+            return redirect()->route('dashboard'); // Redirect if already authenticated
+        }
+        return view('auth.login');
     }
 
-    return redirect()->route('login')->with('error', 'Login failed. Please check your credentials.');
-}
+    public function loginAction(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+        $remember = $request->has('remember');
 
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
+        if ($validator->fails()) {
+            return redirect()->route('login')->withErrors($validator)->withInput();
+        }
 
-public function logout(Request $request)
-{
-    // Clear authentication state
-    Auth::guard('admin_users')->logout();
+        if (Auth::guard('admin_users')->attempt($credentials, $remember)) {
+            $request->session()->regenerate();
+            return redirect()->route('dashboard'); 
+        }
 
-    // Remove remember token from database
-    $user = $request->user('admin_users');
-    if ($user) {
-        $user->forceFill(['remember_token' => null])->save();
+        return redirect()->route('login')->with('error', 'Login failed. Please check your credentials.');
     }
 
-    // Remove remember token from localStorage
-    $request->session()->forget('remember_token');
 
-    // Redirect to login page
-    return redirect()->route('login');
-}
+
+    public function logout(Request $request)
+    {
+        // Clear authentication state
+        Auth::guard('admin_users')->logout();
+
+        // Remove remember token from database
+        $user = $request->user('admin_users');
+        if ($user) {
+            $user->forceFill(['remember_token' => null])->save();
+        }
+
+        // Remove remember token from localStorage
+        $request->session()->forget('remember_token');
+
+        // Redirect to login page
+        return redirect()->route('login');
+    }
 
 
 
@@ -104,44 +106,44 @@ public function logout(Request $request)
     {
         return view('profile');
     }
-//to get all the pending bookings
-public function showBookings()
-{
-    $pendingBookings = Booking::where('status', 'pending')->paginate(10); // Change '10' to the desired number of items per page
-    return view('admin.bookings', compact('pendingBookings'));
-}
+    //to get all the pending bookings
+    public function showBookings()
+    {
+        $pendingBookings = Booking::where('status', 'pending')->paginate(10); // Change '10' to the desired number of items per page
+        return view('admin.bookings', compact('pendingBookings'));
+    }
 
 
-//to update the update bookings status
-public function updateBookingStatus(Request $request, $id)
-{
-    $booking = Booking::findOrFail($id);
-    $booking->status = $request->status;
-    $booking->save();
+    //to update the update bookings status
+    public function updateBookingStatus(Request $request, $id)
+    {
+        $booking = Booking::findOrFail($id);
+        $booking->status = $request->status;
+        $booking->save();
 
-    return redirect()->back()->with('success', 'Booking status updated successfully');
-}
-//to get all the approved booking
-//to get all the approved booking
-public function showApprovedBookings()
-{
-    $approvedBookings = Booking::where('status', 'approved')->paginate(10); // Change '10' to the desired number of items per page
-    return view('admin.approved_bookings', compact('approvedBookings'));
-}
+        return redirect()->back()->with('success', 'Booking status updated successfully');
+    }
+    //to get all the approved booking
+    //to get all the approved booking
+    public function showApprovedBookings()
+    {
+        $approvedBookings = Booking::where('status', 'approved')->paginate(10); // Change '10' to the desired number of items per page
+        return view('admin.approved_bookings', compact('approvedBookings'));
+    }
 
-//to get all the rejected booking
-public function showRejectedBookings()
-{
-    $rejectedBookings = Booking::where('status', 'rejected')->paginate(10); // Change '10' to the desired number of items per page
-    return view('admin.rejected_bookings', compact('rejectedBookings'));
-}
+    //to get all the rejected booking
+    public function showRejectedBookings()
+    {
+        $rejectedBookings = Booking::where('status', 'rejected')->paginate(10); // Change '10' to the desired number of items per page
+        return view('admin.rejected_bookings', compact('rejectedBookings'));
+    }
 
-public function showServices()
-{
-    $services = Service::paginate(10); // Paginate the active services
-    $softDeletedServices = Service::onlyTrashed()->paginate(10); // Paginate the soft deleted services
-    return view('admin.services', compact('services', 'softDeletedServices'));
-}
+    public function showServices()
+    {
+        $services = Service::paginate(10); // Paginate the active services
+        $softDeletedServices = Service::onlyTrashed()->paginate(10); // Paginate the soft deleted services
+        return view('admin.services', compact('services', 'softDeletedServices'));
+    }
 
 
 
@@ -162,55 +164,153 @@ public function showServices()
         return redirect()->route('admin.services')->with('success', 'Service created successfully.');
     }
     public function editService($id)
-{
-    $editService = Service::findOrFail($id);
-    return view('admin.edit_service', compact('editService'));
-}
-
-
-public function updateService(Request $request, $id)
-{
-    $validator = Validator::make($request->all(), [
-        'service_type' => 'required|unique:services,service_type,' . $id,
-    ]);
-
-    if ($validator->fails()) {
-        return redirect()->back()->withErrors($validator)->withInput();
+    {
+        $editService = Service::findOrFail($id);
+        return view('admin.edit_service', compact('editService'));
     }
 
-    $service = Service::findOrFail($id);
-    $service->update([
-        'service_type' => $request->service_type,
-    ]);
 
-    return redirect()->route('admin.services')->with('success', 'Service updated successfully.');
-}
+    public function updateService(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'service_type' => 'required|unique:services,service_type,' . $id,
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $service = Service::findOrFail($id);
+        $service->update([
+            'service_type' => $request->service_type,
+        ]);
+
+        return redirect()->route('admin.services')->with('success', 'Service updated successfully.');
+    }
 
 
-public function softDeleteService($id)
-{
-    $service = Service::findOrFail($id);
-    $service->delete();
-    return redirect()->route('admin.services')->with('success', 'Service soft deleted successfully.');
-}
+    public function softDeleteService($id)
+    {
+        $service = Service::findOrFail($id);
+        $service->delete();
+        return redirect()->route('admin.services')->with('success', 'Service soft deleted successfully.');
+    }
 
-public function restoreService($id)
+    public function restoreService($id)
+    {
+        $service = Service::withTrashed()->findOrFail($id);
+        $service->restore();
+        return redirect()->route('admin.services')->with('success', 'Service restored successfully.');
+    }
+
+    public function deletePermanentlyService($id)
 {
     $service = Service::withTrashed()->findOrFail($id);
-    $service->restore();
-    return redirect()->route('admin.services')->with('success', 'Service restored successfully.');
+    
+    
+    if ($service->trashed()) {
+        $service->forceDelete();
+        return redirect()->route('admin.services')->with('success', 'Service permanently deleted successfully.');
+    } else {
+        // If the service is not soft deleted, you can handle this case based on your application logic
+        return redirect()->route('admin.services')->with('error', 'Service not found or already permanently deleted.');
+    }
 }
-public function getBookingCounts()
+
+
+    //Pet
+
+
+    public function showPets()
+    {
+        $pets = Pet::paginate(10); // Paginate the active pets
+        $softDeletedPets = Pet::onlyTrashed()->paginate(10); // Paginate the soft deleted pets
+        return view('admin.pets', compact('pets', 'softDeletedPets'));
+    }
+
+
+
+
+    public function storePet(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'pet_type' => 'required|unique:pets',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+       Pet::create([
+            'pet_type' => $request->pet_type,
+        ]);
+
+        return redirect()->route('admin.pets')->with('success', 'Pet type created successfully.');
+    }
+    public function editPet($id)
+    {
+        $editPet = Pet::findOrFail($id);
+        return view('admin.edit_pet', compact('editPet'));
+    }
+
+
+    public function updatePet(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'pet_type' => 'required|unique:pets,pet_type,' . $id,
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $pet = Pet::findOrFail($id);
+        $pet->update([
+            'pet_type' => $request->pet_type,
+        ]);
+
+        return redirect()->route('admin.pets')->with('success', 'Pet updated successfully.');
+    }
+
+
+    public function softDeletePet($id)
+    {
+        $pet = Pet::findOrFail($id);
+        $pet->delete();
+        return redirect()->route('admin.pets')->with('success', 'Pet soft deleted successfully.');
+    }
+
+    public function restorePet($id)
+    {
+        $pet = Pet::withTrashed()->findOrFail($id);
+        $pet->restore();
+        return redirect()->route('admin.pets')->with('success', 'Pet restored successfully.');
+    }
+
+    public function deletePermanentlyPet($id)
 {
-    $pendingCount = Booking::where('status', 'pending')->count();
-    $approvedCount = Booking::where('status', 'approved')->count();
-    $rejectedCount = Booking::where('status', 'rejected')->count();
-
-    return [
-        'pendingCount' => $pendingCount,
-        'approvedCount' => $approvedCount,
-        'rejectedCount' => $rejectedCount,
-    ];
+    $pet = Pet::withTrashed()->findOrFail($id);
+    
+    // If the pet exists and is soft deleted, permanently delete it
+    if ($pet->trashed()) {
+        $pet->forceDelete();
+        return redirect()->route('admin.pets')->with('success', 'Pet permanently deleted successfully.');
+    } else {
+        // If the pet is not soft deleted, you can handle this case based on your application logic
+        return redirect()->route('admin.pets')->with('error', 'Pet not found or already permanently deleted.');
+    }
 }
 
+    public function getBookingCounts()
+    {
+        $pendingCount = Booking::where('status', 'pending')->count();
+        $approvedCount = Booking::where('status', 'approved')->count();
+        $rejectedCount = Booking::where('status', 'rejected')->count();
+
+        return [
+            'pendingCount' => $pendingCount,
+            'approvedCount' => $approvedCount,
+            'rejectedCount' => $rejectedCount,
+        ];
+    }
 }

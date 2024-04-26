@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('pet_type');
             $table->timestamps();
+            $table->softDeletes(); 
         });
     }
 

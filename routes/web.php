@@ -43,6 +43,17 @@ Route::middleware(['auth:admin_users'])->group(function () {
     Route::delete('/admin/services/soft-delete/{id}', [AdminAuthController::class, 'softDeleteService'])->name('admin.services.soft-delete');
     Route::post('/admin/services/restore/{id}', [AdminAuthController::class, 'restoreService'])->name('admin.services.restore');
     Route::delete('/admin/services/delete-permanently/{id}', [AdminAuthController::class, 'deletePermanentlyService'])->name('admin.services.delete-permanently');
+
+    // Pet management routes
+    Route::get('/admin/pets', [AdminAuthController::class, 'showPets'])->name('admin.pets');
+    Route::get('/admin/pets/create', [AdminAuthController::class, 'createPet'])->name('admin.pets.create');
+    Route::post('/admin/pets/store', [AdminAuthController::class, 'storePet'])->name('admin.pets.store');
+    Route::get('/admin/pets/edit/{id}', [AdminAuthController::class, 'editPet'])->name('admin.pets.edit');
+    Route::put('/admin/pets/update/{id}', [AdminAuthController::class, 'updatePet'])->name('admin.pets.update');
+    Route::delete('/admin/pets/delete/{id}', [AdminAuthController::class, 'deletePet'])->name('admin.pets.delete');
+    Route::delete('/admin/pets/soft-delete/{id}', [AdminAuthController::class, 'softDeletePet'])->name('admin.pets.soft-delete');
+    Route::post('/admin/pets/restore/{id}', [AdminAuthController::class, 'restorePet'])->name('admin.pets.restore');
+    Route::delete('/admin/pets/delete-permanently/{id}', [AdminAuthController::class, 'deletePermanentlyPet'])->name('admin.pets.delete-permanently');
 });
 
 // Additional dashboard route for authenticated admin users
