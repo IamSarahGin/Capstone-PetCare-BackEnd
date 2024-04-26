@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row mb-4">
             <div class="col">
-                <h2 class=" text-primary">PetCare Dashboard</h2S>
+                <h2 class=" text-primary" style="font-family: 'Nonito', sans-serif;  font-weight: semi-bold;">PETCARE DASHBOARD</h2S>
             </div>
         </div>
         

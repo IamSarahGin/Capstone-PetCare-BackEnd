@@ -25,12 +25,12 @@
         }
 
         .logo-container {
-            text-align: center; /* Center the logo */
-            margin-top: 30vh; /* Adjust as needed */
+            text-align: center; 
+            margin-top: 30vh;
         }
 
         .logo-container img {
-            width: 200px; /* Make logo bigger */
+            width: 200px; 
         }
 
         .content {

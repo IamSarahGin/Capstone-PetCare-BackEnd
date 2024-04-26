@@ -3,7 +3,7 @@
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
         <div>
-            <img src="{{ asset('petcareLogo.ico') }}" class="img-fluid" alt="Logo" width="60">
+            <img src="{{ asset('Logo.png') }}" alt="Logo" width="80">
         </div>
         <div class="sidebar-brand-text mx-3">PetCare Admin</div>
     </a>

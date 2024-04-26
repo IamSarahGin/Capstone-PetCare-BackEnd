@@ -1,15 +1,18 @@
 @extends('layouts.app')
 
-@section('title', 'Pet Type Management')
-
 @section('contents')
 
 <div class="container">
+<div class="row mb-4">   
+<div class="col">
+                <h3 class=" text-primary" style="font-family: 'Nonito', sans-serif;  font-weight: semi-bold;">PET TYPE MANAGEMENT</h3>
+            </div>
+            </div>
     <div class="row">
         <div class="col-md-6">
             <!-- Create Pet Form -->
             <div class="card">
-                <div class="card-header">
+                <div class="card-header"  style="background-color:  #f1f7fe;">
                     Create New Pet Type
                 </div>
                 <div class="card-body">
@@ -30,7 +33,7 @@
         <div class="col-md-12">
             <!-- Display List of Pets -->
             <div class="card">
-                <div class="card-header">
+                <div class="card-header"  style="background-color:  #f1f7fe;">
                     Active Pets
                 </div>
                 <div class="card-body">
@@ -96,7 +99,7 @@
         <div class="col-md-12">
             <!-- Display List of Soft Deleted Pets -->
             <div class="card">
-                <div class="card-header">
+                <div class="card-header"  style="background-color:  #f1f7fe;">
                     Soft Deleted Pets
                 </div>
                 <div class="card-body">

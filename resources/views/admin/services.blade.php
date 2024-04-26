@@ -1,15 +1,18 @@
 @extends('layouts.app')
 
-@section('title', 'Service Management')
-
 @section('contents')
 
 <div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h3 class="text-primary" style="font-family: 'Nonito', sans-serif;  font-weight: semi-bold;">SERVICE MANAGEMENT</h3>
+        </div>
+    </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 " >
             <!-- Create Service Form -->
             <div class="card">
-                <div class="card-header">
+                <div class="card-header" style="background-color:  #f1f7fe;">
                     Create New Service
                 </div>
                 <div class="card-body">
@@ -24,13 +27,12 @@
                 </div>
             </div>
         </div>
-        
     </div>
     <div class="row mt-4">
         <div class="col-md-12">
             <!-- Display List of Services -->
             <div class="card">
-                <div class="card-header">
+                <div class="card-header" style="background-color:  #f1f7fe;">
                     Active Services
                 </div>
                 <div class="card-body">
@@ -39,8 +41,8 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Service Type</th>
-                                    <th>Actions</th>
+                                    <th >Service Type</th>
+                                    <th >Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -55,7 +57,7 @@
                                             <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Are you sure you want to soft delete this service?')">Soft Delete</button>
                                         </form>
                                         <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#editServiceModal{{ $service->id }}">Edit</button>
-                                        
+
                                         <!-- Edit Service Modal -->
                                         <div class="modal fade" id="editServiceModal{{ $service->id }}" tabindex="-1" role="dialog" aria-labelledby="editServiceModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
@@ -96,7 +98,7 @@
         <div class="col-md-12">
             <!-- Display List of Soft Deleted Services -->
             <div class="card">
-                <div class="card-header">
+                <div class="card-header" style="background-color: #f1f7fe;">
                     Soft Deleted Services
                 </div>
                 <div class="card-body">
@@ -105,8 +107,8 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Service Type</th>
-                                    <th>Actions</th>
+                                    <th >Service Type</th>
+                                    <th >Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -136,6 +138,5 @@
         </div>
     </div>
 </div>
-
 
 @endsection
