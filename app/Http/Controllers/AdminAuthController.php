@@ -13,6 +13,7 @@ use App\Models\Booking;
 use App\Models\Service;
 use App\Models\Pet;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
 
 
 class AdminAuthController extends Controller
@@ -313,4 +314,87 @@ class AdminAuthController extends Controller
             'rejectedCount' => $rejectedCount,
         ];
     }
+
+
+    // Method to display the forgot password form
+    public function forgotPassword()
+    {
+        return view('auth.forgot_password');
+    }
+
+    // Method to send the password reset link
+    public function sendResetLink(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:admin_users,email',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $user = AdminUser::where('email', $request->email)->first();
+
+        // Generate random token and PIN code
+        $token = Str::random(60);
+        $pinCode = mt_rand(10000, 99999); 
+
+        // Update user's reset_password_token in database
+        $user->update(['reset_password_token' => $token]);
+
+        // Send email with password reset link and PIN code
+        Mail::send('emails.reset_password', ['token' => $token, 'pin' => $pinCode], function ($message) use ($request) {
+            $message->from(env('MAIL_FROM_ADDRESS'), env('APP_NAME'));
+            $message->to($request->email);
+            $message->subject('Password Reset Request');
+        });
+
+        return redirect()->route('login')->with('success', 'Password reset link has been sent to your email.');
+    }
+
+    // Method to display the password reset form
+    public function showResetPasswordForm($token)
+    {
+        return view('auth.reset_password', ['token' => $token]);
+    }
+
+   
+
+
+// Method to reset the password
+// Method to reset the password
+public function resetPassword(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|email|exists:admin_users,email',
+        'password' => 'required|confirmed|min:8',
+        'token' => 'required'
+    ]);
+
+    if ($validator->fails()) {
+        return redirect()->back()->withErrors($validator)->withInput();
+    }
+
+    // Find user by email and reset token
+    $user = AdminUser::where('email', $request->email)
+                     ->where('reset_password_token', $request->token)
+                     ->first();
+
+    if (!$user) {
+        return redirect()->back()->with('error', 'Invalid token or email address.');
+    }
+
+    // Update user's password and clear reset token
+    $user->update([
+        'password' => Hash::make($request->password),
+        'reset_password_token' => null
+    ]);
+
+    // Set success message in the session
+    return redirect()->route('login')->with('success', 'Password has been reset successfully.');
+}
+
+
+
+
 }

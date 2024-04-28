@@ -8,7 +8,15 @@ Route::middleware(['guest:admin_users'])->group(function () {
         return view('welcome');
     });
 });
+//Route for displaying the forgot password form and sending reset link
+Route::get('/forgot-password', [AdminAuthController::class, 'forgotPassword'])->name('forgot.password');
+Route::post('/send-reset-link', [AdminAuthController::class, 'sendResetLink'])->name('send.reset.link');
 
+// Route for displaying the password reset form
+Route::get('/reset/{token}', [AdminAuthController::class, 'showResetPasswordForm'])->name('password.reset');
+
+// Route for handling the password reset
+Route::post('/reset-password', [AdminAuthController::class, 'resetPassword'])->name('reset.password');
 // Routes for authentication
 Route::middleware(['guest:admin_users'])->group(function () {
     Route::get('register', [AdminAuthController::class, 'register'])->name('register');

@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('level'); // Assuming 'level' indicates the role of the admin user
+            $table->string('level'); 
+            $table->string('reset_password_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

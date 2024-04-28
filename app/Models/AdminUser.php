@@ -11,7 +11,9 @@ class AdminUser extends Model implements Authenticatable
 {
     use HasFactory, AuthenticatableTrait;
 
-    protected $fillable = ['name', 'email', 'password', 'level','remember_token'];
+    protected $fillable = [
+        'name', 'email', 'password', 'level', 'reset_password_token',
+    ];
 
     /**
      * Get the unique identifier for the user.

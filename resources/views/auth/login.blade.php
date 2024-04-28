@@ -73,6 +73,10 @@
                                     <div class="text-center">
                                         <a class="small" href="{{route('register')}}">Create an Account!</a>
                                     </div>
+                                    <div class="text-center">
+    <a class="small" href="{{ route('forgot.password') }}">Forgot Password?</a>
+</div>
+
                                 </div>
                             </div>
                         </div>
