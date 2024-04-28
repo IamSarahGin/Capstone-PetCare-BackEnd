@@ -49,8 +49,8 @@
             display: inline-block;
             padding: 12px 24px;
             margin: 10px;
-            background: linear-gradient(to right, #badfe5, #fbd918); /* Gradient background */
-            color: white;
+            background: linear-gradient(to right, #badfe5, #8cc979); /* Gradient background */
+            color: #e9a35f;
             border: none;
             border-radius: 5px;
             text-decoration: none;
@@ -84,9 +84,7 @@
                     @else
                         <a href="{{ route('login') }}">Log in</a>
 
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
-                        @endif
+                       
                     @endauth
                 </div>
             @endif

@@ -397,4 +397,105 @@ public function resetPassword(Request $request)
 
 
 
+
+
+
+
+
+
+public function index()
+{
+    $adminUsers = AdminUser::paginate(10);
+    $softDeletedAdminUsers = AdminUser::onlyTrashed()->paginate(10); // Retrieve soft deleted admin users
+    return view('admin.users', compact('adminUsers', 'softDeletedAdminUsers'));
+}
+
+
+    public function create()
+    {
+        return view('admin.create');
+    }
+
+    public function store(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'name' => 'required',
+        'email' => 'required|email|unique:admin_users,email',
+        'password' => 'required|min:8',
+    ]);
+
+    if ($validator->fails()) {
+        return redirect()->back()->withErrors($validator)->withInput();
+    }
+
+    $user = AdminUser::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+    ]);
+
+    if ($user) {
+        return redirect()->route('admin.users.index')->with('success', 'Admin user created successfully.');
+    } else {
+        return redirect()->back()->with('error', 'Failed to create admin user. Please try again.');
+    }
+}
+    public function edit($id)
+    {
+        $user = AdminUser::findOrFail($id);
+        return view('admin.edit', compact('user'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email|unique:admin_users,email,' . $id,
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $user = AdminUser::findOrFail($id);
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
+
+        return redirect()->route('admin.users.index')->with('success', 'Admin user updated successfully.');
+    }
+
+    public function destroy($id)
+    {
+        $user = AdminUser::findOrFail($id);
+        $user->delete();
+        return redirect()->route('admin.users.index')->with('success', 'Admin user deleted successfully.');
+    }
+
+    public function softDelete($id)
+    {
+        $user = AdminUser::findOrFail($id);
+        $user->delete();
+        return redirect()->route('admin.users.index')->with('success', 'Admin user soft deleted successfully.');
+    }
+
+    public function restore($id)
+    {
+        $user = AdminUser::withTrashed()->findOrFail($id);
+        $user->restore();
+        return redirect()->route('admin.users.index')->with('success', 'Admin user restored successfully.');
+    }
+    public function deletePermanently($id)
+{
+    $user = AdminUser::withTrashed()->findOrFail($id);
+    
+    // Check if the user is already soft deleted
+    if ($user->trashed()) {
+        $user->forceDelete(); // Permanently delete the user
+        return redirect()->route('admin.users.index')->with('success', 'Admin user permanently deleted successfully.');
+    } else {
+        return redirect()->route('admin.users.index')->with('error', 'Admin user cannot be permanently deleted as it is not soft deleted.');
+    }
+}
 }

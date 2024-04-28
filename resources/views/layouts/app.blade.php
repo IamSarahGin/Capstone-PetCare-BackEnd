@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <link rel="icon" href="{{ asset('admin_assets/petcareLogo.ico') }}" type="image/x-icon">
 
     <title>PetCare Admin Dashboard</title>
 

@@ -17,6 +17,15 @@
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>
+    <!-- Nav Item - Admin Users -->
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('admin.users.index') }}">
+        <i class="fas fa-fw fa-users"></i>
+        <span>Admin Users</span>
+    </a>
+</li>
+
+
     <li class="nav-item ">
         <a class="nav-link" href="{{ route('admin.bookings') }}">
             <i class="fas fa-fw fa-cog"></i>

@@ -34,7 +34,18 @@ Route::middleware(['auth:admin_users'])->group(function () {
     })->name('dashboard');
     
     Route::get('profile', [AdminAuthController::class, 'profile'])->name('profile');
+    Route::middleware(['auth:admin_users'])->group(function () {
+    Route::get('/admin/users', [AdminAuthController::class, 'index'])->name('admin.users.index');
+    Route::get('/admin/users/create', [AdminAuthController::class, 'create'])->name('admin.users.create');
+    Route::post('/admin/users', [AdminAuthController::class, 'store'])->name('admin.users.store');
+    Route::get('/admin/users/{id}/edit', [AdminAuthController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/admin/users/{id}', [AdminAuthController::class, 'update'])->name('admin.users.update');
+    Route::delete('/admin/users/{id}', [AdminAuthController::class, 'destroy'])->name('admin.users.destroy');
+    Route::delete('/admin/users/{id}/soft-delete', [AdminAuthController::class, 'softDelete'])->name('admin.users.soft-delete');
+    Route::post('/admin/users/{id}/restore', [AdminAuthController::class, 'restore'])->name('admin.users.restore');
+    Route::delete('/admin/users/delete-permanently/{id}', [AdminAuthController::class, 'deletePermanently'])->name('admin.users.delete-permanently');
 
+});
     // Booking routes
     Route::get('/admin/bookings', [AdminAuthController::class, 'showBookings'])->name('admin.bookings');
     Route::put('/admin/bookings/{id}', [AdminAuthController::class, 'updateBookingStatus'])->name('admin.bookings.update');
